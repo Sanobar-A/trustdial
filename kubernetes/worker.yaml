@@ -17,7 +17,7 @@ spec:
         image: trustdial-worker
         imagePullPolicy: Never
 
-        # 🔥 Restart if crash
+        # Restart if crash
         resources:
           requests:
             memory: "128Mi"

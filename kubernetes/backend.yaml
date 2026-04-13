@@ -13,35 +13,35 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: trustdial-backend
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
+        - name: backend
+          image: trustdial-backend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
 
-        # 🔥 Health checks
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
+          # Health checks
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
 
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
-        # 🔥 Resource limits
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
+          # Resource limits
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
 
 ---
 apiVersion: v1

@@ -4,14 +4,14 @@ import time
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-# 🔥 Database config
+# Database config
 DATABASE_URL = "postgresql://admin@db:5432/trustdial"
 
-# 🔁 Create DB connection
+# Create DB connection
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
-# 🔁 Retry RabbitMQ connection (VERY IMPORTANT)
+# Retry RabbitMQ connection (VERY IMPORTANT)
 while True:
     try:
         connection = pika.BlockingConnection(
@@ -27,7 +27,7 @@ channel = connection.channel()
 channel.queue_declare(queue="verification_queue")
 
 
-# 🔥 Worker logic
+# Worker logic
 def callback(ch, method, properties, body):
     try:
         data = json.loads(body)
@@ -56,13 +56,13 @@ def callback(ch, method, properties, body):
         print("❌ Worker Error:", e)
 
 
-# 🔥 Start consuming
+# Start consuming
 channel.basic_consume(
     queue="verification_queue",
     on_message_callback=callback,
     auto_ack=True
 )
 
-print("🚀 Worker started and waiting for tasks...")
+print("Worker started and waiting for tasks...")
 
 channel.start_consuming()
