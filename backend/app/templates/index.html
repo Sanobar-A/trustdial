@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Trustdial</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f6f8;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+button {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.verified { color: green; }
+.unverified { color: red; }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📞 Trustdial</h1>
+
+<input id="name" placeholder="Name">
+<input id="address" placeholder="Address">
+<input id="phone" placeholder="Phone">
+<button onclick="addBusiness()">Add</button>
+
+<div id="list"></div>
+
+</div>
+
+<script>
+
+async function loadBusinesses() {
+    let res = await fetch("/businesses");
+    let data = await res.json();
+
+    let html = "";
+
+    data.forEach(b => {
+        html += `
+        <div class="card">
+            <b>${b.name}</b><br>
+            ${b.address}<br>
+            ${b.phone_number}<br>
+
+            <span class="${b.status}">
+                ${b.status}
+            </span><br><br>
+
+            <button onclick="verify(${b.id})">
+                Verify
+            </button>
+        </div>
+        `;
+    });
+
+    document.getElementById("list").innerHTML = html;
+}
+
+async function addBusiness() {
+    let name = document.getElementById("name").value;
+    let address = document.getElementById("address").value;
+    let phone = document.getElementById("phone").value;
+
+    await fetch("/business", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, address, phone_number: phone })
+    });
+
+    loadBusinesses();
+}
+
+async function verify(id) {
+    await fetch(`/business/${id}/verify`, { method: "POST" });
+}
+
+loadBusinesses();
+setInterval(loadBusinesses, 3000);
+
+</script>
+
+</body>
+</html>
