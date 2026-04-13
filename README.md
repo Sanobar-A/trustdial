@@ -1,21 +1,37 @@
-# TrustDial
+# Trustdial - DevOps Project
 
-TrustDial is a platform that verifies business phone numbers
-and helps users identify working, invalid, or outdated contacts.
+A distributed system to verify business contact numbers using FastAPI, RabbitMQ, PostgreSQL, and Docker.
 
-## Features
+# Features
 
-- Phone number verification
-- User reporting system
-- Real-time status updates
-- Scalable microservices architecture
+- Add and manage businesses
+- Async verification using RabbitMQ
+- Worker-based background processing
+- Real-time UI updates
+- Dockerized microservices architecture
 
-## Tech Stack
+# Architecture
+
+Frontend (HTML/JS)  
+⬇  
+FastAPI Backend  
+⬇  
+RabbitMQ Queue  
+⬇  
+Worker Service  
+⬇  
+PostgreSQL Database
+
+# Tech Stack
 
 - FastAPI
 - PostgreSQL
-- Redis
 - RabbitMQ
-- Docker
-- Kubernetes
-- Terraform
+- Docker & Docker Compose
+- SQLAlchemy
+
+# Run Locally
+
+```bash
+docker compose up --build -d
+```

@@ -1,0 +1,41 @@
+name: Trustdial CI/CD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Build Docker images
+      - name: Build Backend Image
+        run: docker build -t trustdial-backend ./backend
+
+      - name: Build Worker Image
+        run: docker build -t trustdial-worker ./worker
+
+      # Install kubectl
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.34.1/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      # Set Kubeconfig (from secret)
+      - name: Set kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+
+      # Deploy to Kubernetes
+      - name: Deploy to K8s
+        run: |
+          kubectl apply -f kubernetes/postgres.yaml
+          kubectl apply -f kubernetes/rabbitmq.yaml
+          kubectl apply -f kubernetes/backend.yaml
+          kubectl apply -f kubernetes/worker.yaml
